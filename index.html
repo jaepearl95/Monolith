@@ -1,0 +1,72 @@
+<html>
+<head>
+  <link rel="stylesheet" href="index.css">
+     <script src="socket.io.js"></script>
+
+</head>
+
+<body style="background-color:black;">
+  <h1><input class="input" style="font-size:60px;" placeholder="please enter email address" size="25.5"></h1>
+  <h1><div class="simple-keyboard"></div></h1>
+
+  <script src="index.min.js"></script>
+  <script>
+    var port=9030
+    var url='127.0.0.1';
+    var socket = io.connect(url+':'+port);
+
+    
+socket.on('gpio', function (data) {
+console.log(data.value);
+redirect();
+
+  });
+
+    let Keyboard = window.SimpleKeyboard.default;
+var mail="";
+
+setInterval(function(){ 
+ redirect();
+}, 300000);
+
+
+
+
+
+let myKeyboard = new Keyboard({
+  onChange: input => onChange(input),
+  onKeyPress: button => onKeyPress(button)
+});
+
+function onChange(input) {
+  document.querySelector(".input").value = input;
+  console.log("Input changed", input);
+  mail=input;
+}
+
+function onKeyPress(button) {
+  console.log("Button pressed", button);
+  if (button=="{enter}"){
+    console.log("YA", mail);
+    socket.emit('send', { r:mail,g:"gval",b:"bval" });
+    redirect();
+  }
+}
+
+function myFunction() {
+  location.reload();
+}
+
+function redirect(){
+
+  window.location.href = "http://127.0.0.1:9030/animations/p5/p5animate/";
+
+
+}
+  </script>
+  <script>
+
+  </script>
+
+</body>
+</html>
